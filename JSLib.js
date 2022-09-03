@@ -15,22 +15,27 @@ module.exports = function () {
             return value < 0 || !value ? lowerBound : value > upperBound ? upperBound : value;
         },
 
-        logErr: function (str, path = '', sync = false, callback = () => { }) {
+        logErr: function (errStr, path = '', sync = false, callback = () => { }) {
             path = path ? path : 'error.txt';
             sync = sync ? 'appendFileSync' : 'appendFile';
-            fs[sync](path, str, function (err) {
+            fs[sync](path, errStr, function (err) {
                 if (err) throw err;
                 callback(`${path}: log successful`)
             });
         },
 
-        log: function (str, path = '', sync = false, callback = () => { }) {
+        log: function (logStr, path = '', sync = false, callback = () => { }) {
             path = path ? path : 'log.txt';
             sync = sync ? 'appendFileSync' : 'appendFile';
-            fs[sync](path, str, function (err) {
+            fs[sync](path, logStr, function (err) {
                 if (err) throw err;
                 callback(`${path}: log successful`)
             });
+        },
+
+        isIterable: function (obj) {    // check if the obj is iterable
+            if (obj == null) return false;
+            return typeof obj[Symbol.iterator] === 'function';
         },
 
         color: {
