@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = function () {
     console.log(getDifference(2, 3));
     return {
 
@@ -37,4 +37,4 @@ module.exports = () => {
             }
         }
     }
-}
+}()
