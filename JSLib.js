@@ -1,9 +1,10 @@
 module.exports = () => {
-
-
+    console.log(getDifference(2, 3));
     return {
-        getDifference: function (val1, val2, precision = false) {
-            return precision ? Math.floor((val1 - val2) * Math.pow(10, precision)) / Math.pow(10, precision) : (val1 - val2) / val2;
+
+        getDifference: function (val1, val2, precision) {
+            console.log(val1, val2, precision)
+            return precision ? Math.floor((val1 - val2) * 100 * Math.pow(10, precision)) / Math.pow(10, precision) : (val1 - val2) * 100 / val2;
         },
 
         color: {
