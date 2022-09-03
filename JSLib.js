@@ -10,6 +10,10 @@ module.exports = function () {
             return millis ? new Date()[Func]([], { hour12: !hour24, hour: '2-digit', minute: '2-digit', fractionalSecondDigits: millisPrecision }) : new Date()[Func]([], { hour12: !hour24, hour: '2-digit', minute: '2-digit' });
         },
 
+        fixBetween: function (value = undefined, lowerBound = undefined, upperBound = undefined) {
+            return value < 0 || !value ? lowerBound : value > upperBound ? upperBound : value;
+        },
+
         color: {
             reset: "\x1b[0m",
             bright: "\x1b[1m",
