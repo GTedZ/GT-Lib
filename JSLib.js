@@ -1,4 +1,5 @@
 module.exports = function () {
+    const fs = require('fs');
     return {
 
         difference: function (val1, val2, precision = undefined) {
@@ -12,6 +13,24 @@ module.exports = function () {
 
         fixBetween: function (value = undefined, lowerBound = undefined, upperBound = undefined) {
             return value < 0 || !value ? lowerBound : value > upperBound ? upperBound : value;
+        },
+
+        logErr: function (str, path = '', sync = false, callback = () => { }) {
+            path = path ? path : 'error.txt';
+            sync = sync ? 'appendFileSync' : 'appendFile';
+            fs[sync](path, str, function (err) {
+                if (err) throw err;
+                callback(`${path}: log successful`)
+            });
+        },
+
+        log: function (str, path = '', sync = false, callback = () => { }) {
+            path = path ? path : 'log.txt';
+            sync = sync ? 'appendFileSync' : 'appendFile';
+            fs[sync](path, str, function (err) {
+                if (err) throw err;
+                callback(`${path}: log successful`)
+            });
         },
 
         color: {
