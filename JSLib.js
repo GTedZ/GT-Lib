@@ -1,8 +1,13 @@
 module.exports = function () {
     return {
 
-        getDifference: function (val1, val2, precision = undefined) {
+        difference: function (val1, val2, precision = undefined) {
             return precision ? Math.floor(((val1 - val2) / val2) * Math.pow(10, precision)) / Math.pow(10, precision) : (val1 - val2) / val2;
+        },
+
+        time: function (millis = false, date = false, hour24 = false, millisPrecision = 3) {
+            let Func = date ? 'toLocaleDateString' : 'toLocaleTimeString';
+            return millis ? new Date()[Func]([], { hour12: !hour24, hour: '2-digit', minute: '2-digit', fractionalSecondDigits: millisPrecision }) : new Date()[Func]([], { hour12: !hour24, hour: '2-digit', minute: '2-digit' });
         },
 
         color: {
