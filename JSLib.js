@@ -38,6 +38,27 @@ module.exports = function () {
             return typeof obj[Symbol.iterator] === 'function';
         },
 
+        checkArrays: function (...args) {
+            let length = -1;
+            for (let array of args) {   // check for length || array
+                if (!Array.isArray(array)) return false;
+                if (length == -1) length = array.length;
+                else if (length != array.length) return false;
+            }
+            console.log('equal lengths')
+            for (let x in args) {
+                let current_array = args[x];
+                let current_length = current_array.length;
+                for (let index in args) {
+                    if (index == x) break;
+                    let resultArr_length = current_array.filter(item => args[index].includes(item)).length;
+                    if (resultArr_length != current_length) return false;
+                }
+            }
+
+            return true;
+        },
+
         color: {
             reset: "\x1b[0m",
             bright: "\x1b[1m",
