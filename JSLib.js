@@ -45,7 +45,6 @@ module.exports = function () {
                 if (length == -1) length = array.length;
                 else if (length != array.length) return false;
             }
-            console.log('equal lengths')
             for (let x in args) {
                 let current_array = args[x];
                 let current_length = current_array.length;
@@ -55,7 +54,6 @@ module.exports = function () {
                     if (resultArr_length != current_length) return false;
                 }
             }
-
             return true;
         },
 
