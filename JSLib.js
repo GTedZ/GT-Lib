@@ -38,7 +38,7 @@ module.exports = function () {
             return typeof obj[Symbol.iterator] === 'function';
         },
 
-        checkArrays: function (...args) {
+        checkArrayEquality: function (...args) {
             let length = -1;
             for (let array of args) {   // check for length || array
                 if (!Array.isArray(array)) return false;
