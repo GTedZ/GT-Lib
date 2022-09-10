@@ -57,6 +57,35 @@ module.exports = function () {
             return true;
         },
 
+        sortObjectsByKey: function (OriginalMap, keyToCheck) {
+            var SortedMap = new Map;
+            let keysOfObj = Object.keys(Object.values(OriginalMap)[0]);
+            if (!keysOfObj.includes(keyToCheck)) throw `${keyToCheck} is not a valid key`;
+
+            let keys = Object.keys(OriginalMap);
+
+            for (var i = 0; i < keys.length; i++) {
+                for (var j = 0; j < keys.length - 1; j++) {
+
+                    if (parseFloat(OriginalMap[keys[j]][keyToCheck]) > parseFloat(OriginalMap[keys[j + 1]][keyToCheck])) {
+                        var switching = keys[j];
+                        keys[j] = keys[j + 1];
+                        keys[j + 1] = switching;
+                    }
+
+                }
+            }
+
+            let length = keys.length;
+            for (var i = 0; i < keys.length; i++) {
+                SortedMap[keys[i]] = OriginalMap[keys[i]];
+                SortedMap[keys[i]].gainerRank = length - i;
+                SortedMap[keys[i]].loserRank = i + 1;
+            }
+
+            return SortedMap;
+        },
+
         color: {
             reset: "\x1b[0m",
             bright: "\x1b[1m",
