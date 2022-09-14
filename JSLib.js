@@ -59,8 +59,8 @@ module.exports = function () {
 
         seperateDigits: function (number, seperator = ',') {
             let isNegative = number < 0 ? '-' : '';
-            let arr = Math.floor(number).toString().split('').reverse();
-            let decimals = number - Math.floor(number) > 0 ? (Math.round((number - Math.floor(number)) * 100) / 100).toString().substring(1) : '';
+            let arr = Math.floor(Math.abs(number)).toString().split('').reverse();
+            let decimals = Math.abs(number) - Math.floor(Math.abs(number)) > 0 ? (Math.round((Math.abs(number) - Math.floor(Math.abs(number))) * 100) / 100).toString().substring(1) : '';
             let newArr = [];
             for (let x = 0; x < arr.length; x++) {
                 newArr.push(arr[x]);
