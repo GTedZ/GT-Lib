@@ -57,6 +57,21 @@ module.exports = function () {
             return true;
         },
 
+        seperateDigits: function (number, seperator = ',') {
+            let arr = Math.floor(number).toString().split('').reverse();
+            let decimals = number - Math.floor(number) > 0 ? (Math.round((number - Math.floor(number)) * 100) / 100).toString().substring(1) : '';
+            let newArr = [];
+            for (let x = 0; x < arr.length; x++) {
+                newArr.push(arr[x]);
+                if ((x + 1) % 3 == 0 && x != 0 && x != arr.length) {
+                    newArr.push(seperator);
+                }
+            }
+            if (newArr[newArr.length - 1] == ',') newArr.splice(newArr.length - 1, 1)
+            let newNumber = newArr.reverse().join('') + decimals;
+            return newNumber;
+        },
+
         sortObjectsByKey: function (OriginalMap, keyToCheck) {
             var SortedMap = new Map;
             let keysOfObj = Object.keys(Object.values(OriginalMap)[0]);
