@@ -58,6 +58,7 @@ module.exports = function () {
         },
 
         seperateDigits: function (number, seperator = ',') {
+            let isNegative = number < 0 ? '-' : '';
             let arr = Math.floor(number).toString().split('').reverse();
             let decimals = number - Math.floor(number) > 0 ? (Math.round((number - Math.floor(number)) * 100) / 100).toString().substring(1) : '';
             let newArr = [];
@@ -68,7 +69,7 @@ module.exports = function () {
                 }
             }
             if (newArr[newArr.length - 1] == ',') newArr.splice(newArr.length - 1, 1)
-            let newNumber = newArr.reverse().join('') + decimals;
+            let newNumber = isNegative + newArr.reverse().join('') + decimals;
             return newNumber;
         },
 
