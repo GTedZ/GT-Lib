@@ -1,0 +1,19 @@
+{
+  "name": "jslib",
+  "version": "1.0.0",
+  "description": "A simple library for mundane and bloaty functions\r This will be a (hopefully public) library for simple yet bloaty functions that might be useful in projects",
+  "main": "JSLib.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GTedZ/JSLib.git"
+  },
+  "author": "GTedZ",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GTedZ/JSLib/issues"
+  },
+  "homepage": "https://github.com/GTedZ/JSLib#readme"
+}
