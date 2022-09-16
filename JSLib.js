@@ -15,15 +15,6 @@ module.exports = function () {
             return value < 0 || !value ? lowerBound : value > upperBound ? upperBound : value;
         },
 
-        logErr: function (errStr, path = '', sync = false, callback = () => { }) {
-            path = path ? path : 'error.txt';
-            sync = sync ? 'appendFileSync' : 'appendFile';
-            fs[sync](path, errStr, function (err) {
-                if (err) throw err;
-                callback(`${path}: log successful`)
-            });
-        },
-
         log: function (logStr, withTime = false, path = '', sync = false, callback = () => { }) {
             path = path ? path : 'log.txt';
             sync = sync ? 'appendFileSync' : 'appendFile';
@@ -35,6 +26,22 @@ module.exports = function () {
             }
 
             fs[sync](path, logStr + '\n', function (err) {
+                if (err) throw err;
+                callback(`${path}: log successful`)
+            });
+        },
+
+        logErr: function (errStr, withTime = false, path = '', sync = false, callback = () => { }) {
+            path = path ? path : 'error.txt';
+            sync = sync ? 'appendFileSync' : 'appendFile';
+            if (withTime) {
+                let length = logStr.length;
+                let remainingLength = 120 - length;
+                for (let x = 0; x < remainingLength; x++) logStr += ' ';
+                logStr += this.time(true);
+            }
+
+            fs[sync](path, errStr, function (err) {
                 if (err) throw err;
                 callback(`${path}: log successful`)
             });
