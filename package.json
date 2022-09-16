@@ -1,6 +1,6 @@
 {
   "name": "gtlib",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "A simple library for mundane and bloaty functions\r This will be a (hopefully public) library for simple yet bloaty functions that might be useful in projects",
   "main": "JSLib.js",
   "scripts": {
