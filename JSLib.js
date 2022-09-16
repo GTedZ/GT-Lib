@@ -3,7 +3,7 @@ module.exports = function () {
     return {
 
         difference: function (val1, val2, precision = undefined) {
-            return precision ? Math.floor(((val1 - val2) / val2) * Math.pow(10, precision)) / Math.pow(10, precision) : (val1 - val2) / val2;
+            return precision ? Math.floor(((val1 - val2) / val2) * Math.pow(10, precision) * 100) / Math.pow(10, precision) : (val1 - val2) * 100 / val2;
         },
 
         time: function (millis = false, date = false, hour24 = false, millisPrecision = 3) {
@@ -24,10 +24,17 @@ module.exports = function () {
             });
         },
 
-        log: function (logStr, path = '', sync = false, callback = () => { }) {
+        log: function (logStr, withTime = false, path = '', sync = false, callback = () => { }) {
             path = path ? path : 'log.txt';
             sync = sync ? 'appendFileSync' : 'appendFile';
-            fs[sync](path, logStr, function (err) {
+            if (withTime) {
+                let length = logStr.length;
+                let remainingLength = 120 - length;
+                for (let x = 0; x < remainingLength; x++) logStr += ' ';
+                logStr += this.time(true);
+            }
+
+            fs[sync](path, logStr + '\n', function (err) {
                 if (err) throw err;
                 callback(`${path}: log successful`)
             });
