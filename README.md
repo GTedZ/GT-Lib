@@ -69,6 +69,7 @@ let seperated_number_1 = lib.seperateDigits(number, ','); // => 1,234,567,890
 
 
 Ever been in need to stringify an object, used the normal 'JSON.stringify()' and had it return only a portion of your initial object and ignoring properties children objects and functions?
+
 stringify(object):
 ```js
 let obj = {
