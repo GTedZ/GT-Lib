@@ -30,12 +30,12 @@ console.log(diff_2); // => 269.0685
 
 time(millis?, date?, 24hour?, millis_Precision):
 ```js
-let time_string = lib.time();                           // => 10:45 PM
-let time_with_millis = lib.time(true);                  // => 10:45:50.487 PM
-let date_time = lib.time(false, true);                  // => 9/25/2022, 10:47 PM
-let date_time_with_millis = lib.time(true, true);       // => 9/25/2022, 10:47:36.185 PM
+let time_string         = lib.time();                   // => 10:45 PM
+let time_with_millis    = lib.time(true);               // => 10:45:50.487 PM
+let date_time           = lib.time(false, true);        // => 9/25/2022, 10:47 PM
+let date_with_millis    = lib.time(true, true);         // => 9/25/2022, 10:47:36.185 PM
 ...
-let time_24hour_format = lib.time(false, false, true);  // => 22:48
+let time_24hour_format  = lib.time(false, false, true); // => 22:48
 ```
 
 
