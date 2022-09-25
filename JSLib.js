@@ -87,6 +87,10 @@ module.exports = function () {
             return newNumber;
         },
 
+        stringify: function (parent, tabulation = 2, iterationCount = 0) {
+            return handleStringify(parent, tabulation, iterationCount);
+        },
+
         sortObjectsByKey: function (OriginalMap, keyToCheck) {
             var SortedMap = new Map;
             let keysOfObj = Object.keys(Object.values(OriginalMap)[0]);
@@ -146,4 +150,50 @@ module.exports = function () {
             }
         }
     }
-}()
+}();
+
+
+////// functions
+
+// stringify
+
+function handleStringify(parent, tabulation = 2, iterationCount = 0) {
+    let str = '{';       // ' '.repeat(iterationCount * tabulation)
+
+    for (let key of Object.keys(parent)) {
+        let child = parent[key];
+        if (typeof child == "function") str += handleFunction(child, key, iterationCount, tabulation)
+        else if (typeof child == 'object') str += handleObject(child, key, iterationCount, tabulation);
+        else str += handleNormalType(child, key, iterationCount, tabulation, typeof child)
+    }
+
+    str = str.slice(0, -1);
+    return str + '\n' + ' '.repeat(iterationCount * tabulation) + '}';
+}
+
+function handleObject(item, key, iterationCount, tabulation) {
+    let str = '\n' + ' '.repeat(iterationCount * tabulation + tabulation) + `"${key}": `;
+
+    let response = handleStringify(item, tabulation, iterationCount + 1) + ',';
+    return str + response;
+}
+
+function handleFunction(item, key, iterationCount, tabulation) {
+    let str = '\n' + ' '.repeat(iterationCount * tabulation + tabulation) + `"${key}": `;
+    // return str + `${item.toString()},`
+
+    let fnctString = item.toString();
+    let arguments = fnctString.split(')')[0].split('(')[1].split(',');
+
+    let index = fnctString.indexOf('{');
+    arguments.push(fnctString.substring(index, fnctString.length - 1));
+
+    return str + `FUNCTION ("${arguments.join('","')}"),`;
+}
+
+function handleNormalType(item, key, iterationCount, tabulation) {
+    let str = '\n' + ' '.repeat(iterationCount * tabulation + tabulation) + `"${key}": `;
+    return str + `${JSON.stringify(item, null, tabulation)},`
+}
+
+// stringify
