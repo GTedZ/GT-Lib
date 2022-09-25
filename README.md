@@ -13,6 +13,7 @@ const lib = require('gtlib');
 
 Some examples of the functions available:
 
+
 difference(value1, value2, precision):
 ```js
 let currentPrice = 20, startPrice = 10;
@@ -26,6 +27,7 @@ let diff_2 = lib.difference(currentPrice_2, startPrice_2, precision);
 console.log(diff_2); // => 269.0685
 ```
 
+
 time(millis?, date?, 24hour?, millis_Precision):
 ```js
 let time_string = lib.time();                           // => 10:45 PM
@@ -35,6 +37,7 @@ let date_time_with_millis = lib.time(true, true);       // => 9/25/2022, 10:47:3
 ...
 let time_24hour_format = lib.time(false, false, true);  // => 22:48
 ```
+
 
 checkArrayEquality(array_1, array_2, etc...)
 ```js
@@ -53,6 +56,7 @@ let arr_5 = [0, 1, 2, 3];
 let isEqual_2 = lib.checkArrayEquality(arr_4, arr_5);
 console.log(isEqual); // => false
 ```
+
 
 seperateDigits(number, seperator):
 ```js
