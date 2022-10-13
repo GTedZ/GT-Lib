@@ -1,4 +1,6 @@
-module.exports = function () {
+module.exports = everything()
+
+function everything() {
     const fs = require('fs');
     return {
 
@@ -52,6 +54,11 @@ module.exports = function () {
             return typeof obj[Symbol.iterator] === 'function';
         },
 
+        isNumber: function (item) {
+            let i = parseFloat(item);
+            return i == i;
+        },
+
         checkArrayEquality: function (...args) {
             let length = -1;
             for (let array of args) {   // check for length || array
@@ -91,6 +98,10 @@ module.exports = function () {
             return handleStringify(parent, tabulation, iterationCount);
         },
 
+        parse: function (parent) {
+            return handleParse(parent);
+        },
+
         sortObjectsByKey: function (OriginalMap, keyToCheck) {
             var SortedMap = new Map;
             let keysOfObj = Object.keys(Object.values(OriginalMap)[0]);
@@ -118,6 +129,18 @@ module.exports = function () {
             }
 
             return SortedMap;
+        },
+
+        parseAllPropertiesToFloat: (obj) => {
+            if (Array.isArray(obj)) for (let index in obj) obj[index] = parseAllPropertiesToFloat(obj[index], index)
+            else if (typeof obj == 'object') for (let key of Object.keys(obj)) obj[key] = parseAllPropertiesToFloat(obj[key], key);
+            else obj = this.getNumberOrString(obj);
+            return obj;
+        },
+
+        getNumberOrString: (item) => {
+            let i = parseFloat(item);
+            return i == i ? i : item;
         },
 
         color: {
@@ -150,50 +173,135 @@ module.exports = function () {
             }
         }
     }
-}();
+};
 
 
 ////// functions
 
-// stringify
+// stringify \
 
-function handleStringify(parent, tabulation = 2, iterationCount = 0) {
+function handleStringify(parent, tabulation = 2, iterationCount = 0, isArray = false) {
     let str = '{';       // ' '.repeat(iterationCount * tabulation)
+    if (isArray) str = '[';
 
     for (let key of Object.keys(parent)) {
+        // console.log({isArray}, str);
+        str += '\n' + ' '.repeat(iterationCount * tabulation + tabulation) + (isArray ? '' : `"${key}": `);
         let child = parent[key];
-        if (typeof child == "function") str += handleFunction(child, key, iterationCount, tabulation)
-        else if (typeof child == 'object') str += handleObject(child, key, iterationCount, tabulation);
-        else str += handleNormalType(child, key, iterationCount, tabulation, typeof child)
+        if (typeof child == "function") {
+            str += handleFunction(child)
+        } else if (typeof child == 'object') {
+            if (Array.isArray(child)) {
+                str += handleArray(child, iterationCount, tabulation);
+            }
+            else {
+                str += handleObject(child, iterationCount, tabulation);
+            }
+        }
+        else str += handleNormalType(child, tabulation, typeof child)
     }
 
     str = str.slice(0, -1);
-    return str + '\n' + ' '.repeat(iterationCount * tabulation) + '}';
+    let ender = isArray ? ']' : '}';
+    return str + '\n' + ' '.repeat(iterationCount * tabulation) + ender;
 }
 
-function handleObject(item, key, iterationCount, tabulation) {
-    let str = '\n' + ' '.repeat(iterationCount * tabulation + tabulation) + `"${key}": `;
-
+function handleObject(item, iterationCount, tabulation) {
     let response = handleStringify(item, tabulation, iterationCount + 1) + ',';
-    return str + response;
+    return response;
 }
 
-function handleFunction(item, key, iterationCount, tabulation) {
-    let str = '\n' + ' '.repeat(iterationCount * tabulation + tabulation) + `"${key}": `;
-    // return str + `${item.toString()},`
+function handleArray(item, iterationCount, tabulation) {
+    let response = handleStringify(item, tabulation, iterationCount + 1, true) + ',';
+    return response;
+}
 
+function handleFunction(item) {
     let fnctString = item.toString();
     let arguments = fnctString.split(')')[0].split('(')[1].split(',');
 
-    let index = fnctString.indexOf('{');
+    let index = fnctString.indexOf('{') + 1;
     arguments.push(fnctString.substring(index, fnctString.length - 1));
 
-    return str + `FUNCTION ("${arguments.join('","')}"),`;
+    return `FUNCTION("${arguments.join('","')}"),`;
 }
 
-function handleNormalType(item, key, iterationCount, tabulation) {
-    let str = '\n' + ' '.repeat(iterationCount * tabulation + tabulation) + `"${key}": `;
-    return str + `${JSON.stringify(item, null, tabulation)},`
+function handleNormalType(item, tabulation) {
+    return `${JSON.stringify(item, null, tabulation)},`
 }
 
-// stringify
+// stringify /
+
+// parse \
+
+function handleParse(parentStr) {
+    console.log(parentStr)
+    let parentObj = {};
+    let startOfProcess = false;
+    let fetchingKey = true;
+    let currentKey = '';
+    for (let index = 0; index < parentStr.length; index++) {
+        let char = parentStr[index];
+        console.log(char, index);
+        if (!startOfProcess) {
+            if (char == '{') {
+                console.log('found `{` at char', index);
+                startOfProcess = true;
+            }
+            continue;
+        }
+
+        if (fetchingKey) {
+            let [newKey, newIndex] = fetchString(parentStr, index);
+            if (currentKey == -1) break;
+            currentKey = newKey;
+            index = newIndex;
+            fetchingKey = false;
+        } else {
+            let type = fetchType(parentStr, index);
+            if (type == 'number') {
+                let [value, newIndex] = fetchNumber(parentStr, index); // TODO
+                parentObj[currentKey] = value;
+                index = newIndex;
+            }
+        }
+    }
+    return parentObj;
+}
+
+function fetchString(parentString, index) {
+    let searchingForKey = false;
+    let str = '';
+    for (let x = index; x < parentString.length; x++) {
+        let char = parentString[x];
+        if (!searchingForKey) {
+            if (char == `"`) {
+                searchingForKey = true;
+                console.log(`found '"' at index ${x}, char: ${char}`)
+            }
+        } else {
+            if (char == `"`) {
+                x++;
+                console.log([str, x])
+                return [str, x];
+            }
+            str += char;
+        }
+    }
+    return [-1, -1]
+}
+
+function fetchType(parentString, index) {
+
+    for (let x = index; x < parentString.length; x++) {
+        let char = parentString[x];
+        if (everything().isNumber(char)) return 'number';
+        else if (char == '[') return 'array';
+        else if (char == '"') return 'string';
+        else if (char == '{') return 'object';
+        else if (char == 'F') return 'function';
+    }
+
+}
+
+// parse /
