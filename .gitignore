@@ -1,4 +1,5 @@
 node_modules/
+package-lock
 package-lock.json
+JSLib.js
 Debug Run.bat
-test.js
