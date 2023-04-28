@@ -6,6 +6,10 @@ class GTLib {
         );
     }
 
+    delay(ms) {
+        return new Promise(r => setTimeout(r, ms));
+    }
+
 }
 
 const instance = new GTLib();
